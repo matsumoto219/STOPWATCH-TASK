@@ -8,11 +8,17 @@ let sec = 0;
 let min = 0;
 let hour = 0;
 
+//時間計算用の定数を設定
+const INTERVAL_MS = 10;    // タイマーの更新間隔（ミリ秒）
+const MS_IN_SEC = 1000;    // 1秒あたりのミリ秒数
+const SEC_IN_MIN = 60;     // 1分あたりの秒数
+const MIN_IN_HOUR = 60;    // 1時間あたりの分数
+
 //　ボタン制御
 //　スタート
 $(".button__start").click(function() {
   if (timerID === null) {                 //タイマーの作動状況をチェック
-    timerID = setInterval(countUp, 10);   //10ms毎に呼び出し
+    timerID = setInterval(countUp, INTERVAL_MS);
   }
 
   //ボタン状態制御
@@ -52,19 +58,19 @@ $(".button__reset").click(function(){
   $(".button__reset").prop("disabled", true);      //無効化
 });
 
-//  カウントアップ関数 +10ms更新
+//  カウントアップ関数
 function countUp() {
-  elapsedTime += 10;
+  elapsedTime += INTERVAL_MS;
   updateDisplay();    //書き換え関数呼び出し
 };
 
 // 表示書き換え関数
 function updateDisplay() {
 // mathのfloorを使い、小数点を切り捨て
-  ms = Math.floor((elapsedTime % 1000) / 10);           //ミリ秒　経過時間から1秒未満の値を取り出す。
-  sec = Math.floor((elapsedTime / 1000) % 60);          //秒　経過時間を秒に変換し、0〜59秒の値を取り出す。
-  min = Math.floor((elapsedTime / (1000 * 60)) % 60);   //分　経過時間を分に変換し、0〜59分の値を取り出す。
-  hour = Math.floor(elapsedTime / (1000 * 60 * 60));    //時間　経過時間を時間(hour)に変換。
+  ms = Math.floor((elapsedTime % MS_IN_SEC) / INTERVAL_MS);                   //ミリ秒　経過時間から1秒未満の値を取り出す。
+  sec = Math.floor((elapsedTime / MS_IN_SEC) % SEC_IN_MIN);                   //秒　経過時間を秒に変換し、0〜59秒の値を取り出す。
+  min = Math.floor((elapsedTime / (MS_IN_SEC * SEC_IN_MIN)) % MIN_IN_HOUR);   //分　経過時間を分に変換し、0〜59分の値を取り出す。
+  hour = Math.floor(elapsedTime / (MS_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR));    //時間　経過時間を時間(hour)に変換。
 
 // htmlへ反映
 // stringで数値を文字列に変換　　　　2桁未満の場合、2桁目に0を追加
